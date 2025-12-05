@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:newsdigest_flutter/presentation/screens/newsdetail_screen.dart';
 import '/core/constants/colors.dart';
 
 class NewsCard extends StatelessWidget {
@@ -30,7 +31,10 @@ class NewsCard extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () {
-            // 상세 화면 이동
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => NewsDetailScreen(news: news)),
+            );
           },
           child: Padding(
             padding: const EdgeInsets.all(12),

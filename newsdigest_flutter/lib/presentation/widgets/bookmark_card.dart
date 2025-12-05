@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:newsdigest_flutter/core/constants/colors.dart';
+import 'package:newsdigest_flutter/presentation/screens/newsdetail_screen.dart';
 
 class BookmarkCard extends StatelessWidget {
   final Map<String, dynamic> news;
@@ -25,7 +26,10 @@ class BookmarkCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
-          // TODO: 상세 이동
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => NewsDetailScreen(news: news)),
+          );
         },
         child: Padding(
           padding: const EdgeInsets.all(12),
