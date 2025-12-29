@@ -9,6 +9,7 @@ class BookmarkScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 지금은 북마크 더미 데이터로 HomeScreen.dummyNews 재사용
+    // TODO: 실제 즐겨찾기 저장소 연동
     const List<Map<String, dynamic>> bookmarked = HomeScreen.dummyNews;
 
     return Scaffold(
