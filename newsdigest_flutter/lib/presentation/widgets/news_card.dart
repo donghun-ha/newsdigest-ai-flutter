@@ -15,6 +15,7 @@ class NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? imageUrl = news['image'] as String?;
     final ThemeData theme = Theme.of(context);
 
     return Container(
@@ -42,27 +43,43 @@ class NewsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start, // 전체 왼쪽 정렬
               children: <Widget>[
                 // 뉴스 이미지
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: CachedNetworkImage(
-                    imageUrl: news['image'] ?? '',
+                if (imageUrl != null && imageUrl.isNotEmpty)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      height: 160,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      placeholder: (BuildContext context, String url) =>
+                          Container(
+                        height: 160,
+                        color: AppColors.imagePlaceholder,
+                      ),
+                      errorWidget:
+                          (BuildContext context, String url, Object error) =>
+                              Container(
+                        height: 160,
+                        color: AppColors.imageError,
+                        child: const Icon(Icons.broken_image_outlined),
+                      ),
+                    ),
+                  )
+                else
+                  Container(
                     height: 160,
                     width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (BuildContext context, String url) =>
-                        Container(
-                      height: 160,
+                    decoration: BoxDecoration(
                       color: AppColors.imagePlaceholder,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    errorWidget:
-                        (BuildContext context, String url, Object error) =>
-                            Container(
-                      height: 160,
-                      color: AppColors.imageError,
-                      child: const Icon(Icons.broken_image_outlined),
+                    child: const Icon(
+                      Icons.image_outlined,
+                      color: Colors.grey,
+                      size: 40,
                     ),
                   ),
-                ),
+
                 const SizedBox(height: 12),
 
                 // 제목
