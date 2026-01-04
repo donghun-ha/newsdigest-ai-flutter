@@ -44,6 +44,18 @@ class NewsNotifier extends StateNotifier<NewsState> {
     }
   }
 
+  Future<Map<String, dynamic>> getNewsDetail(int newsId, String query) async {
+    print("NewsNotifier: detail API 호출 newsId=$newsId, query=$query");
+    try {
+      final detail = await _repository.getNewsDetail(newsId, query);
+      print("detail 응답: ${detail['image_url']}");
+      return detail;
+    } catch (e) {
+      print("detail API 에러: $e");
+      rethrow;
+    }
+  }
+
   void clearSummary() {
     state = state.copyWith(lastSummary: null);
   }

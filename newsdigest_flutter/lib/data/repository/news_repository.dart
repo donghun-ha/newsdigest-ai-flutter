@@ -55,4 +55,20 @@ class NewsRepository {
         jsonDecode(resp.body) as Map<String, dynamic>;
     return data['summary'] as String? ?? '';
   }
+
+  Future<Map<String, dynamic>> getNewsDetail(int newsId, String query) async {
+    print("Repository: detail API 호출 newsId=$newsId, query=$query");
+    final Uri uri = Uri.parse('$baseUrl/news/search/$newsId/detail');
+    final http.Response resp = await _client.get(
+      uri,
+      headers: <String, String>{'Content-Type': 'application/json'},
+    );
+    if (resp.statusCode != 200) {
+      throw Exception('뉴스 상세정보 조회 실패: ${resp.statusCode} ${resp.body}');
+    }
+    print("Response: detail 응답 성공: ${resp.body}");
+    final Map<String, dynamic> data =
+        jsonDecode(resp.body) as Map<String, dynamic>;
+    return data;
+  }
 }

@@ -136,7 +136,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 return GestureDetector(
                   onTap: () async {
+                    print("🖱️ 카드 탭: ${item.title}"); // 로그
+
+                    // detail 정보 먼저 가져오기
+                    try {
+                      final detail = await notifier.getNewsDetail(
+                          item.id, _searchController.text);
+                      print("detail 이미지: ${detail['image_url']}"); // 로그
+                    } catch (e) {
+                      print("detail 에러: $e");
+                    }
+
                     await notifier.summarize(item);
+
                     final String? summary =
                         ref.read(newsNotifierProvider).lastSummary;
                     if (!mounted || summary == null) return;
@@ -146,9 +158,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       isScrollControlled: true,
                       builder: (_) => Padding(
                         padding: const EdgeInsets.all(16),
-                        child: SingleChildScrollView(
-                          child: Text(summary),
-                        ),
+                        child: SingleChildScrollView(child: Text(summary)),
                       ),
                     ).then((_) => notifier.clearSummary());
                   },
