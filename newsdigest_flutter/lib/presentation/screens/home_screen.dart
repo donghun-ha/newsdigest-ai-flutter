@@ -136,7 +136,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 return GestureDetector(
                   onTap: () async {
-                    print("🖱️ 카드 탭: ${item.title}"); // 로그
+                    print("카드 탭: ${item.title}"); // 로그
 
                     // detail 정보 먼저 가져오기
                     try {

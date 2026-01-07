@@ -71,4 +71,23 @@ class NewsRepository {
         jsonDecode(resp.body) as Map<String, dynamic>;
     return data;
   }
+
+  Future<String?> fetchThumbnailForNews(String title) async {
+    final Uri uri = Uri.parse('$baseUrl/news/images').replace(
+        queryParameters: <String, String>{'query': title, 'count': '1'});
+
+    final http.Response resp = await _client.get(uri);
+
+    if (resp.statusCode != 200) {
+      print("이미지 검색 실패: ${resp.statusCode} ${resp.body}");
+      return null;
+    }
+
+    final Map<String, dynamic> data =
+        jsonDecode(resp.body) as Map<String, dynamic>;
+    final List images = data['images'] as List ?? [];
+    if (images.isEmpty) return null;
+
+    return images.first['thumbnail'] as String?;
+  }
 }
