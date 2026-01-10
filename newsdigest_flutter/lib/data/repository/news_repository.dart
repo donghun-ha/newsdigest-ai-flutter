@@ -37,14 +37,16 @@ class NewsRepository {
     required String text,
     int maxSentences = 3,
   }) async {
-    final Uri uri = Uri.parse('$baseUrl/summarize');
+    final Uri uri = Uri.parse(
+      '$baseUrl/summarize?max_sentences=$maxSentences',
+    );
+
     final http.Response resp = await _client.post(
       uri,
-      headers: <String, String>{'Content-Type': 'application/json'},
-      body: jsonEncode(<String, Object>{
-        'text': text,
-        'max_sentences': maxSentences,
-      }),
+      headers: <String, String>{
+        'Content-Type': 'text/plain; charset=utf-8',
+      },
+      body: text,
     );
 
     if (resp.statusCode != 200) {
@@ -52,7 +54,8 @@ class NewsRepository {
     }
 
     final Map<String, dynamic> data =
-        jsonDecode(resp.body) as Map<String, dynamic>;
+        jsonDecode(utf8.decode(resp.bodyBytes)) as Map<String, dynamic>;
+
     return data['summary'] as String? ?? '';
   }
 
