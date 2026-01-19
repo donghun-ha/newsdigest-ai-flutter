@@ -39,7 +39,7 @@ dependencies:
   # 공유 가능
   share_plus: ^10.0.2
   # preview 미리보기
-  device_preview: ^1.1.0
+  # device_preview: ^1.1.0
 
 dev_dependencies:
   flutter_test:

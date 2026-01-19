@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:newsdigest_flutter/data/repository/news_repository.dart';
 import '../../data/models/news_item.dart';
@@ -28,15 +29,30 @@ class NewsNotifier extends StateNotifier<NewsState> {
   }
 
   Future<void> summarize(NewsItem item, {int maxSentences = 3}) async {
+    debugPrint("summarize() 진입");
     state = state.copyWith(isSummarizing: true, errorMessage: null);
+
     try {
+      // 상세 API 먼저 호출해서 본문 가져오기
+      final detail = await _repository.getNewsDetail(
+          item.id, item.title); // title을 query로 사용
+
+      // 상세 본문 우선, 없으면 검색 요약 사용
+      final String textToSummarize = detail['article_text'] ?? item.summary;
+
+      print("요약 입력 길이: ${textToSummarize.length}자");
+
       final String summary = await _repository.summarize(
-          text: item.summary, maxSentences: maxSentences);
+        text: textToSummarize,
+        maxSentences: maxSentences,
+      );
+
       state = state.copyWith(
         isSummarizing: false,
         lastSummary: summary,
       );
     } catch (e) {
+      debugPrint("요약 에러: $e");
       state = state.copyWith(
         isSummarizing: false,
         errorMessage: '요약 실패: $e',

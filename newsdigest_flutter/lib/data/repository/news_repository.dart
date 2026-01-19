@@ -61,7 +61,10 @@ class NewsRepository {
 
   Future<Map<String, dynamic>> getNewsDetail(int newsId, String query) async {
     print("Repository: detail API 호출 newsId=$newsId, query=$query");
-    final Uri uri = Uri.parse('$baseUrl/news/search/$newsId/detail');
+    final Uri uri = Uri.parse('$baseUrl/news/search/$newsId/detail')
+        .replace(queryParameters: <String, String>{
+      'query': query,
+    });
     final http.Response resp = await _client.get(
       uri,
       headers: <String, String>{'Content-Type': 'application/json'},

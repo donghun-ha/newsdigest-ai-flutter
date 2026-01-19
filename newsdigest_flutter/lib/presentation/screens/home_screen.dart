@@ -80,6 +80,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                   ),
                   onSubmitted: (String value) {
+                    debugPrint("검색 submit: $value");
                     notifier.search(value);
                   },
                 ),
@@ -136,16 +137,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 return GestureDetector(
                   onTap: () async {
-                    print("카드 탭: ${item.title}"); // 로그
+                    debugPrint(">>>>>카드 탭: ${item.title}"); // 로그
 
                     // detail 정보 먼저 가져오기
-                    try {
-                      final detail = await notifier.getNewsDetail(
-                          item.id, _searchController.text);
-                      print("detail 이미지: ${detail['image_url']}"); // 로그
-                    } catch (e) {
-                      print("detail 에러: $e");
-                    }
+                    // try {
+                    //   final detail = await notifier.getNewsDetail(
+                    //     item.id,
+                    //     _searchController.text,
+                    //   );
+                    // } catch (e) {
+                    //   debugPrint("detail 에러: $e");
+                    // }
 
                     await notifier.summarize(item);
 

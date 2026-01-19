@@ -5,11 +5,13 @@ import '/core/constants/colors.dart';
 
 class NewsCard extends StatelessWidget {
   final Map<String, dynamic> news;
+  final VoidCallback? onTap;
   final EdgeInsetsGeometry? margin;
 
   const NewsCard({
     super.key,
     required this.news,
+    this.onTap,
     this.margin,
   });
 
@@ -31,12 +33,7 @@ class NewsCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => NewsDetailScreen(news: news)),
-            );
-          },
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(12),
             child: Column(
@@ -119,7 +116,7 @@ class NewsCard extends StatelessWidget {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: () {
-                        // 원문 링크 열기
+                        debugPrint("요약 버튼 눌림");
                       },
                       child: const Text(
                         '원문 보기',
