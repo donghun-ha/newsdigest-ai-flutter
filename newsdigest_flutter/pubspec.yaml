@@ -38,6 +38,8 @@ dependencies:
   cached_network_image: ^3.4.1
   # 공유 가능
   share_plus: ^10.0.2
+  # 웹뷰
+  webview_flutter: ^4.10.0
   # preview 미리보기
   # device_preview: ^1.1.0
 

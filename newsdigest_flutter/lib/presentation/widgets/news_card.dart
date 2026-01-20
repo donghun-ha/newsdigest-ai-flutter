@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:newsdigest_flutter/presentation/screens/news_webview_screen.dart';
 import '/core/constants/colors.dart';
 
 class NewsCard extends StatelessWidget {
@@ -21,6 +22,7 @@ class NewsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? imageUrl = news['image'] as String?;
+    final String? url = news['url'] as String?;
     final ThemeData theme = Theme.of(context);
 
     return Container(
@@ -119,7 +121,13 @@ class NewsCard extends StatelessWidget {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: () {
-                        debugPrint("요약 버튼 눌림");
+                        if (url == null || url.isEmpty) return;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => NewsWebViewScreen(url: url),
+                          ),
+                        );
                       },
                       child: const Text(
                         '원문 보기',
