@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:newsdigest_flutter/presentation/screens/newsdetail_screen.dart';
 import '/core/constants/colors.dart';
 
 class NewsCard extends StatelessWidget {
   final Map<String, dynamic> news;
   final VoidCallback? onTap;
+  final VoidCallback? onToggleBookmark;
+  final bool isBookmarked;
   final EdgeInsetsGeometry? margin;
 
   const NewsCard({
     super.key,
     required this.news,
     this.onTap,
+    this.onToggleBookmark,
+    this.isBookmarked = false,
     this.margin,
   });
 
@@ -131,13 +134,16 @@ class NewsCard extends StatelessWidget {
                     IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
-                      icon: const Icon(
-                        Icons.favorite_border,
+                      icon: Icon(
+                        isBookmarked
+                            ? Icons.favorite
+                            : Icons.favorite_border,
                         size: 20,
                         color: AppColors.primary,
                       ),
                       onPressed: () {
                         // 즐겨찾기 토글
+                        onToggleBookmark?.call();
                       },
                     ),
                   ],

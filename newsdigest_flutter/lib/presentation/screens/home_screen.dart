@@ -3,10 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:newsdigest_flutter/presentation/news/news_notifier.dart';
 import 'package:newsdigest_flutter/presentation/news/news_state.dart';
 import 'package:newsdigest_flutter/presentation/screens/newsdetail_screen.dart';
+import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_provider.dart';
+import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_notifier.dart';
+import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_state.dart';
 import '../widgets/news_card.dart';
 import '/core/constants/colors.dart';
 import '../news/news_provider.dart'; // newsNotifierProvider import
 import '../../data/models/news_item.dart';
+import '../../data/models/bookmark_item.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +21,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+  bool _didLoadBookmarks = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _didLoadBookmarks) return;
+      _didLoadBookmarks = true;
+      ref.read(bookmarkNotifierProvider.notifier).loadBookmarks();
+    });
+  }
 
   @override
   void dispose() {
@@ -31,6 +46,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     // Riverpod 상태 & Notifier
     final NewsState state = ref.watch(newsNotifierProvider);
     final NewsNotifier notifier = ref.read(newsNotifierProvider.notifier);
+    final BookmarkState bookmarkState = ref.watch(bookmarkNotifierProvider);
+    final BookmarkNotifier bookmarkNotifier =
+        ref.read(bookmarkNotifierProvider.notifier);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -135,7 +153,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   'summary': item.summary,
                   'image': item.imageUrl, // 지금은 null 이라 placeholder 쓰게 해도 됨
                   'date': item.publishedAt ?? '', // pubDate 문자열
+                  'url': item.url,
+                  'source': item.source,
+                  'query': _searchController.text,
                 };
+                final bool isBookmarked =
+                    bookmarkState.bookmarkedUrls.contains(item.url);
 
                 return GestureDetector(
                   onTap: () {
@@ -150,35 +173,27 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         ));
                   },
-                  child: NewsCard(news: newsMap),
+                  child: NewsCard(
+                    news: newsMap,
+                    isBookmarked: isBookmarked,
+                    onToggleBookmark: () {
+                      final BookmarkItem bookmark = BookmarkItem(
+                        url: item.url,
+                        newsId: item.id,
+                        title: item.title,
+                        summary: item.summary,
+                        publishedAt: item.publishedAt,
+                        source: item.source,
+                        imageUrl: item.imageUrl,
+                        query: _searchController.text,
+                        createdAt: DateTime.now().millisecondsSinceEpoch,
+                      );
+                      bookmarkNotifier.toggleBookmark(bookmark);
+                    },
+                  ),
                 );
               },
             ),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        currentIndex: 0,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: '홈',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark_border),
-            activeIcon: Icon(Icons.bookmark),
-            label: '즐겨찾기',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            activeIcon: Icon(Icons.settings),
-            label: '설정',
           ),
         ],
       ),

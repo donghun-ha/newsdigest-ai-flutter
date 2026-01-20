@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:newsdigest_flutter/core/constants/colors.dart';
-import 'package:newsdigest_flutter/presentation/screens/home_screen.dart';
 import 'package:newsdigest_flutter/presentation/screens/splash_screen.dart';
 
 void main() {
@@ -28,7 +27,7 @@ class NewsDigestApp extends StatelessWidget {
           seedColor: AppColors.primary,
         ),
       ),
-      home: const HomeScreen(),
+      home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

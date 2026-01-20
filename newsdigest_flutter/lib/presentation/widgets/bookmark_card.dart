@@ -2,14 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:newsdigest_flutter/core/constants/colors.dart';
 import 'package:newsdigest_flutter/presentation/screens/newsdetail_screen.dart';
+import 'package:newsdigest_flutter/data/models/bookmark_item.dart';
 
 class BookmarkCard extends StatelessWidget {
-  final Map<String, dynamic> news;
+  final BookmarkItem item;
   final VoidCallback? onRemove; // X 버튼 눌렀을때
 
   const BookmarkCard({
     super.key,
-    required this.news,
+    required this.item,
     this.onRemove,
   });
 
@@ -26,12 +27,13 @@ class BookmarkCard extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
+          final Map<String, dynamic> newsMap = item.toUiMap();
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (_) => NewsDetailScreen(
-                news: news,
-                searchQuery: '',
+                news: newsMap,
+                searchQuery: item.query ?? '',
               ),
             ),
           );
@@ -45,7 +47,7 @@ class BookmarkCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: CachedNetworkImage(
-                  imageUrl: news['image'],
+                  imageUrl: item.imageUrl ?? '',
                   height: 80,
                   width: 80,
                   fit: BoxFit.cover,
@@ -79,7 +81,7 @@ class BookmarkCard extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            news['title'],
+                            item.title,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -105,7 +107,7 @@ class BookmarkCard extends StatelessWidget {
 
                     // 날짜
                     Text(
-                      news['date'] ?? '2024년 12월 2일 오전 10:30',
+                      item.publishedAt ?? '',
                       style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
