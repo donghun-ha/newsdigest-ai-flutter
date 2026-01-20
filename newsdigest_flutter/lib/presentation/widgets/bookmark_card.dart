@@ -28,7 +28,12 @@ class BookmarkCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (_) => NewsDetailScreen(news: news)),
+            MaterialPageRoute(
+              builder: (_) => NewsDetailScreen(
+                news: news,
+                searchQuery: '',
+              ),
+            ),
           );
         },
         child: Padding(

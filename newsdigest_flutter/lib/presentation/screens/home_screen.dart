@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:newsdigest_flutter/presentation/news/news_notifier.dart';
 import 'package:newsdigest_flutter/presentation/news/news_state.dart';
+import 'package:newsdigest_flutter/presentation/screens/newsdetail_screen.dart';
 import '../widgets/news_card.dart';
 import '/core/constants/colors.dart';
 import '../news/news_provider.dart'; // newsNotifierProvider import
@@ -129,6 +130,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 // NewsCard 에 맞게 Map으로 변환 (일단 임시 매핑)
                 final Map<String, dynamic> newsMap = <String, dynamic>{
+                  'id': item.id,
                   'title': item.title,
                   'summary': item.summary,
                   'image': item.imageUrl, // 지금은 null 이라 placeholder 쓰게 해도 됨
@@ -136,33 +138,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 };
 
                 return GestureDetector(
-                  onTap: () async {
+                  onTap: () {
                     debugPrint(">>>>>카드 탭: ${item.title}"); // 로그
 
-                    // detail 정보 먼저 가져오기
-                    // try {
-                    //   final detail = await notifier.getNewsDetail(
-                    //     item.id,
-                    //     _searchController.text,
-                    //   );
-                    // } catch (e) {
-                    //   debugPrint("detail 에러: $e");
-                    // }
-
-                    await notifier.summarize(item);
-
-                    final String? summary =
-                        ref.read(newsNotifierProvider).lastSummary;
-                    if (!mounted || summary == null) return;
-
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      builder: (_) => Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: SingleChildScrollView(child: Text(summary)),
-                      ),
-                    ).then((_) => notifier.clearSummary());
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => NewsDetailScreen(
+                            news: newsMap,
+                            searchQuery: _searchController.text,
+                          ),
+                        ));
                   },
                   child: NewsCard(news: newsMap),
                 );

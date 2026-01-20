@@ -30,8 +30,6 @@ class NewsNotifier extends StateNotifier<NewsState> {
 
   Future<void> summarize(NewsItem item, {int maxSentences = 3}) async {
     debugPrint("summarize() 진입");
-    state = state.copyWith(isSummarizing: true, errorMessage: null);
-
     try {
       // 상세 API 먼저 호출해서 본문 가져오기
       final detail = await _repository.getNewsDetail(
@@ -39,22 +37,63 @@ class NewsNotifier extends StateNotifier<NewsState> {
 
       // 상세 본문 우선, 없으면 검색 요약 사용
       final String textToSummarize = detail['article_text'] ?? item.summary;
+      await summarizeText(item.id, textToSummarize, maxSentences: maxSentences);
+    } catch (e) {
+      debugPrint("요약 에러: $e");
+      final Set<int> updatedSummarizing =
+          Set<int>.from(state.summarizingIds)..remove(item.id);
+      state = state.copyWith(
+        summarizingIds: updatedSummarizing,
+        errorMessage: '요약 실패: $e',
+      );
+    }
+  }
 
-      print("요약 입력 길이: ${textToSummarize.length}자");
+  Future<void> summarizeText(int newsId, String text,
+      {int maxSentences = 3}) async {
+    final Set<int> updatedSummarizing =
+        Set<int>.from(state.summarizingIds)..add(newsId);
+    final Map<int, String> updatedSummaries =
+        Map<int, String>.from(state.summaries)..remove(newsId);
+    state = state.copyWith(
+      summarizingIds: updatedSummarizing,
+      summaries: updatedSummaries,
+      errorMessage: null,
+    );
+
+    if (text.trim().isEmpty) {
+      updatedSummarizing.remove(newsId);
+      updatedSummaries[newsId] = '';
+      state = state.copyWith(
+        summarizingIds: updatedSummarizing,
+        summaries: updatedSummaries,
+      );
+      return;
+    }
+
+    try {
+      debugPrint("요약 입력 길이: ${text.length}자");
 
       final String summary = await _repository.summarize(
-        text: textToSummarize,
+        text: text,
         maxSentences: maxSentences,
       );
 
+      final Set<int> doneSummarizing =
+          Set<int>.from(state.summarizingIds)..remove(newsId);
+      final Map<int, String> doneSummaries =
+          Map<int, String>.from(state.summaries);
+      doneSummaries[newsId] = summary;
       state = state.copyWith(
-        isSummarizing: false,
-        lastSummary: summary,
+        summarizingIds: doneSummarizing,
+        summaries: doneSummaries,
       );
     } catch (e) {
       debugPrint("요약 에러: $e");
+      final Set<int> doneSummarizing =
+          Set<int>.from(state.summarizingIds)..remove(newsId);
       state = state.copyWith(
-        isSummarizing: false,
+        summarizingIds: doneSummarizing,
         errorMessage: '요약 실패: $e',
       );
     }
@@ -72,7 +111,9 @@ class NewsNotifier extends StateNotifier<NewsState> {
     }
   }
 
-  void clearSummary() {
-    state = state.copyWith(lastSummary: null);
+  void clearSummary(int newsId) {
+    final Map<int, String> updatedSummaries =
+        Map<int, String>.from(state.summaries)..remove(newsId);
+    state = state.copyWith(summaries: updatedSummaries);
   }
 }
