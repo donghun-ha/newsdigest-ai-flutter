@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:newsdigest_flutter/data/repository/news_repository.dart';
@@ -26,6 +27,21 @@ class NewsNotifier extends StateNotifier<NewsState> {
         errorMessage: '뉴스 검색 실패: $e',
       );
     }
+  }
+
+  Future<void> loadTrending({String? seedQuery}) async {
+    final List<String> seeds = <String>[
+      'AI',
+      '테크',
+      '경제',
+      '금리',
+      '증시',
+      '산업',
+      '정책',
+    ];
+    final String query =
+        seedQuery ?? seeds[Random().nextInt(seeds.length)];
+    await search(query);
   }
 
   Future<void> summarize(NewsItem item, {int maxSentences = 3}) async {

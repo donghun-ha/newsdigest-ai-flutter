@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:newsdigest_flutter/data/models/bookmark_item.dart';
+import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_notifier.dart';
+import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_provider.dart';
+import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_state.dart';
 import 'package:newsdigest_flutter/presentation/news/news_provider.dart';
 import 'package:newsdigest_flutter/presentation/news/news_state.dart';
 import 'package:newsdigest_flutter/presentation/screens/news_webview_screen.dart';
@@ -82,8 +86,14 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
         newsId != null ? state.summaries[newsId] : widget.news['summary'];
     final String title = widget.news['title'] ?? '';
     final String rawDate = widget.news['date'] ?? '';
+    final String source = widget.news['source'] ?? '';
     final String url = widget.news['url'] ?? '';
     final String formattedDate = _formatKoreanDate(rawDate);
+    final BookmarkState bookmarkState = ref.watch(bookmarkNotifierProvider);
+    final BookmarkNotifier bookmarkNotifier =
+        ref.read(bookmarkNotifierProvider.notifier);
+    final bool isBookmarked =
+        url.isNotEmpty && bookmarkState.bookmarkedUrls.contains(url);
     final List<String> summaryLines = _buildSummaryLines(
       isSummarizing ? '' : (summary ?? ''),
     );
@@ -286,16 +296,38 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                   Align(
                     alignment: Alignment.center,
                     child: TextButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.bookmark_border,
-                        color: AppColors.textSecondary,
+                      onPressed: url.isEmpty
+                          ? null
+                          : () {
+                              final BookmarkItem bookmark = BookmarkItem(
+                                url: url,
+                                newsId: newsId,
+                                title: title,
+                                summary: summary ?? '',
+                                publishedAt: rawDate,
+                                source: source,
+                                imageUrl: imageUrl,
+                                query: widget.searchQuery,
+                                createdAt:
+                                    DateTime.now().millisecondsSinceEpoch,
+                              );
+                              bookmarkNotifier.toggleBookmark(bookmark);
+                            },
+                      icon: Icon(
+                        isBookmarked
+                            ? Icons.bookmark
+                            : Icons.bookmark_border,
+                        color: isBookmarked
+                            ? AppColors.primary
+                            : AppColors.textSecondary,
                       ),
-                      label: const Text(
+                      label: Text(
                         '북마크',
                         style: TextStyle(
                           fontSize: 14,
-                          color: AppColors.textSecondary,
+                          color: isBookmarked
+                              ? AppColors.primary
+                              : AppColors.textSecondary,
                           fontWeight: FontWeight.w600,
                         ),
                       ),

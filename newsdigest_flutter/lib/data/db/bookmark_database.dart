@@ -25,21 +25,38 @@ class BookmarkDatabase {
       path,
       version: 1,
       onCreate: (Database db, int version) async {
-        await db.execute('''
-          CREATE TABLE bookmarks (
-            url TEXT PRIMARY KEY,
-            news_id INTEGER,
-            title TEXT NOT NULL,
-            summary TEXT NOT NULL,
-            published_at TEXT,
-            source TEXT,
-            image_url TEXT,
-            query TEXT,
-            created_at INTEGER NOT NULL
-          )
-        ''');
+        await _createBookmarksTable(db);
+        await _createRecentSearchesTable(db);
+      },
+      onOpen: (Database db) async {
+        await _createRecentSearchesTable(db);
       },
     );
+  }
+
+  Future<void> _createBookmarksTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS bookmarks (
+        url TEXT PRIMARY KEY,
+        news_id INTEGER,
+        title TEXT NOT NULL,
+        summary TEXT NOT NULL,
+        published_at TEXT,
+        source TEXT,
+        image_url TEXT,
+        query TEXT,
+        created_at INTEGER NOT NULL
+      )
+    ''');
+  }
+
+  Future<void> _createRecentSearchesTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS recent_searches (
+        term TEXT PRIMARY KEY,
+        created_at INTEGER NOT NULL
+      )
+    ''');
   }
 
   Future<List<BookmarkItem>> getBookmarks() async {

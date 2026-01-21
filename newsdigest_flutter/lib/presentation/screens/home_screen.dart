@@ -6,6 +6,9 @@ import 'package:newsdigest_flutter/presentation/screens/newsdetail_screen.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_provider.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_notifier.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_state.dart';
+import 'package:newsdigest_flutter/presentation/recent_search/recent_search_notifier.dart';
+import 'package:newsdigest_flutter/presentation/recent_search/recent_search_provider.dart';
+import 'package:newsdigest_flutter/presentation/recent_search/recent_search_state.dart';
 import '../widgets/news_card.dart';
 import '/core/constants/colors.dart';
 import '../news/news_provider.dart'; // newsNotifierProvider import
@@ -22,14 +25,21 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _didLoadBookmarks = false;
+  bool _didInitHome = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted || _didLoadBookmarks) return;
-      _didLoadBookmarks = true;
-      ref.read(bookmarkNotifierProvider.notifier).loadBookmarks();
+      if (!mounted) return;
+      if (!_didLoadBookmarks) {
+        _didLoadBookmarks = true;
+        ref.read(bookmarkNotifierProvider.notifier).loadBookmarks();
+      }
+      if (_didInitHome) return;
+      _didInitHome = true;
+      ref.read(recentSearchNotifierProvider.notifier).loadRecent();
+      ref.read(newsNotifierProvider.notifier).loadTrending();
     });
   }
 
@@ -49,6 +59,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final BookmarkState bookmarkState = ref.watch(bookmarkNotifierProvider);
     final BookmarkNotifier bookmarkNotifier =
         ref.read(bookmarkNotifierProvider.notifier);
+    final RecentSearchState recentState =
+        ref.watch(recentSearchNotifierProvider);
+    final RecentSearchNotifier recentNotifier =
+        ref.read(recentSearchNotifierProvider.notifier);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -101,6 +115,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   onSubmitted: (String value) {
                     debugPrint("검색 submit: $value");
                     notifier.search(value);
+                    recentNotifier.addSearch(value);
                   },
                 ),
                 const SizedBox(height: 16),
@@ -114,15 +129,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Wrap(
-                  spacing: 8,
-                  children: <Widget>[
-                    _SearchChip(label: '테크'),
-                    _SearchChip(label: 'AI'),
-                    _SearchChip(label: '금리'),
-                    _SearchChip(label: '경제'),
-                  ],
-                ),
+                if (recentState.items.isEmpty)
+                  const Text(
+                    '최근 검색어가 없습니다.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: AppColors.textSecondary,
+                    ),
+                  )
+                else
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: recentState.items.map((search) {
+                      return _SearchChip(
+                        label: search.term,
+                        onTap: () {
+                          _searchController.text = search.term;
+                          notifier.search(search.term);
+                        },
+                        onDelete: () => recentNotifier.removeSearch(search.term),
+                      );
+                    }).toList(),
+                  ),
               ],
             ),
           ),
@@ -204,16 +233,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 // 최근 검색어
 class _SearchChip extends StatelessWidget {
   final String label;
+  final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
-  const _SearchChip({required this.label});
+  const _SearchChip({
+    required this.label,
+    this.onTap,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
+    return InputChip(
       label: Text(label),
       labelStyle: const TextStyle(
         fontSize: 13,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
+        color: AppColors.primary,
+      ),
+      onPressed: onTap,
+      onDeleted: onDelete,
+      deleteIcon: const Icon(
+        Icons.close,
+        size: 16,
+        color: AppColors.textSecondary,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
       backgroundColor: const Color(0xFFE5F0FF),
