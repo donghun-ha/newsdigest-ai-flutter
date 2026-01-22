@@ -174,6 +174,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               itemCount: state.items.length,
               itemBuilder: (BuildContext context, int index) {
                 final NewsItem item = state.items[index];
+                debugPrint(
+                  'HomeCard index=$index id=${item.id} title=${item.title} image=${item.imageUrl}',
+                );
 
                 // NewsCard 에 맞게 Map으로 변환 (일단 임시 매핑)
                 final Map<String, dynamic> newsMap = <String, dynamic>{

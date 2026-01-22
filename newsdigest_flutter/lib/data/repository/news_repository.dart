@@ -78,6 +78,35 @@ class NewsRepository {
     return data;
   }
 
+  Future<Map<String, dynamic>> getNewsDetailByUrl({
+    required String url,
+    String? title,
+    String? summary,
+    String? publishedAt,
+    String? source,
+  }) async {
+    print("Repository: detail API 호출 url=$url");
+    final Uri uri = Uri.parse('$baseUrl/news/detail').replace(
+      queryParameters: <String, String>{
+        'url': url,
+        if (title != null) 'title': title,
+        if (summary != null) 'summary': summary,
+        if (publishedAt != null) 'published_at': publishedAt,
+        if (source != null) 'source': source,
+      },
+    );
+    final http.Response resp = await _client.get(
+      uri,
+      headers: <String, String>{'Content-Type': 'application/json'},
+    );
+    if (resp.statusCode != 200) {
+      throw Exception('뉴스 상세정보 조회 실패: ${resp.statusCode} ${resp.body}');
+    }
+    final Map<String, dynamic> data =
+        jsonDecode(resp.body) as Map<String, dynamic>;
+    return data;
+  }
+
   Future<String?> fetchThumbnailForNews(String title) async {
     final Uri uri = Uri.parse('$baseUrl/news/images').replace(
         queryParameters: <String, String>{'query': title, 'count': '1'});

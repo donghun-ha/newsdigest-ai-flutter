@@ -40,6 +40,10 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
     final int? newsId = widget.news['id'] as int?;
     final Object? summaryObj = widget.news['summary'];
     final String fallbackSummary = summaryObj is String ? summaryObj : '';
+    final String url = widget.news['url'] ?? '';
+    final String title = widget.news['title'] ?? '';
+    final String rawDate = widget.news['date'] ?? '';
+    final String source = widget.news['source'] ?? '';
     final notifier = ref.read(newsNotifierProvider.notifier);
 
     setState(() {
@@ -49,20 +53,32 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
     try {
       if (newsId != null) {
         notifier.clearSummary(newsId);
-        try {
-          final detail = await notifier.getNewsDetail(
-            newsId,
-            widget.searchQuery,
-          );
-          if (!mounted) return;
-          setState(() {
-            _detail = detail;
-          });
+      }
+      try {
+        final detail = url.isNotEmpty
+            ? await notifier.getNewsDetailByUrl(
+                url: url,
+                title: title,
+                summary: summaryObj is String ? summaryObj : '',
+                publishedAt: rawDate,
+                source: source,
+              )
+            : await notifier.getNewsDetail(
+                newsId ?? 0,
+                widget.searchQuery,
+              );
+        if (!mounted) return;
+        setState(() {
+          _detail = detail;
+        });
 
-          final String textToSummarize =
-              detail['article_text'] ?? fallbackSummary;
+        final String textToSummarize =
+            detail['article_text'] ?? fallbackSummary;
+        if (newsId != null) {
           await notifier.summarizeText(newsId, textToSummarize);
-        } catch (_) {
+        }
+      } catch (_) {
+        if (newsId != null) {
           await notifier.summarizeText(newsId, fallbackSummary);
         }
       }

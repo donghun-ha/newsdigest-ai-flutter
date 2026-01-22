@@ -47,9 +47,14 @@ class NewsNotifier extends StateNotifier<NewsState> {
   Future<void> summarize(NewsItem item, {int maxSentences = 3}) async {
     debugPrint("summarize() 진입");
     try {
-      // 상세 API 먼저 호출해서 본문 가져오기
-      final detail = await _repository.getNewsDetail(
-          item.id, item.title); // title을 query로 사용
+      // URL 기반 상세 API 먼저 호출해서 본문 가져오기
+      final detail = await _repository.getNewsDetailByUrl(
+        url: item.url,
+        title: item.title,
+        summary: item.summary,
+        publishedAt: item.publishedAt,
+        source: item.source,
+      );
 
       // 상세 본문 우선, 없으면 검색 요약 사용
       final String textToSummarize = detail['article_text'] ?? item.summary;
@@ -119,6 +124,30 @@ class NewsNotifier extends StateNotifier<NewsState> {
     print("NewsNotifier: detail API 호출 newsId=$newsId, query=$query");
     try {
       final detail = await _repository.getNewsDetail(newsId, query);
+      print("detail 응답: ${detail['image_url']}");
+      return detail;
+    } catch (e) {
+      print("detail API 에러: $e");
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> getNewsDetailByUrl({
+    required String url,
+    String? title,
+    String? summary,
+    String? publishedAt,
+    String? source,
+  }) async {
+    print("NewsNotifier: detail API 호출 url=$url");
+    try {
+      final detail = await _repository.getNewsDetailByUrl(
+        url: url,
+        title: title,
+        summary: summary,
+        publishedAt: publishedAt,
+        source: source,
+      );
       print("detail 응답: ${detail['image_url']}");
       return detail;
     } catch (e) {
