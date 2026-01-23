@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_notifier.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_provider.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_state.dart';
-import '/core/constants/colors.dart';
 import '../widgets/bookmark_card.dart';
 
 class BookmarkScreen extends ConsumerStatefulWidget {
@@ -29,12 +28,14 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme scheme = theme.colorScheme;
     final BookmarkState state = ref.watch(bookmarkNotifierProvider);
     final BookmarkNotifier notifier =
         ref.read(bookmarkNotifierProvider.notifier);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -49,12 +50,12 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    const Text(
+                    Text(
                       '즐겨찾기',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.textPrimary,
+                        color: scheme.onSurface,
                       ),
                     ),
                     GestureDetector(
@@ -73,8 +74,8 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: state.items.isEmpty
-                              ? AppColors.textSecondary
-                              : AppColors.primary,
+                              ? scheme.onSurfaceVariant
+                              : scheme.primary,
                         ),
                       ),
                     ),
@@ -82,8 +83,8 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
                 ),
               ),
             ),
-            const Divider(
-              color: AppColors.border,
+            Divider(
+              color: scheme.outlineVariant,
             ),
             const SizedBox(height: 12),
 
@@ -91,11 +92,11 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
             if (state.isLoading)
               const LinearProgressIndicator(),
             if (state.items.isEmpty && !state.isLoading)
-              const Expanded(
+              Expanded(
                 child: Center(
                   child: Text(
                     '저장된 즐겨찾기가 없습니다.',
-                    style: TextStyle(color: AppColors.textSecondary),
+                    style: TextStyle(color: scheme.onSurfaceVariant),
                   ),
                 ),
               )

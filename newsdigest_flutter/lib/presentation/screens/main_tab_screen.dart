@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:newsdigest_flutter/presentation/screens/bookmark_screen.dart';
 import 'package:newsdigest_flutter/presentation/screens/home_screen.dart';
 import 'package:newsdigest_flutter/presentation/screens/settings_screen.dart';
-import '/core/constants/colors.dart';
 
 class MainTabScreen extends StatefulWidget {
   const MainTabScreen({super.key});
@@ -22,6 +21,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme scheme = theme.colorScheme;
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -30,8 +32,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.grey,
+        backgroundColor: scheme.surface,
+        selectedItemColor: scheme.primary,
+        unselectedItemColor: scheme.onSurfaceVariant,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         onTap: (int index) {

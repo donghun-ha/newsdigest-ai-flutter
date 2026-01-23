@@ -10,7 +10,6 @@ import 'package:newsdigest_flutter/presentation/recent_search/recent_search_noti
 import 'package:newsdigest_flutter/presentation/recent_search/recent_search_provider.dart';
 import 'package:newsdigest_flutter/presentation/recent_search/recent_search_state.dart';
 import '../widgets/news_card.dart';
-import '/core/constants/colors.dart';
 import '../news/news_provider.dart'; // newsNotifierProvider import
 import '../../data/models/news_item.dart';
 import '../../data/models/bookmark_item.dart';
@@ -64,19 +63,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final RecentSearchNotifier recentNotifier =
         ref.read(recentSearchNotifierProvider.notifier);
 
+    final ColorScheme scheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: scheme.surface,
+        foregroundColor: scheme.onSurface,
         centerTitle: false,
         titleSpacing: 24,
-        title: const Text(
+        title: Text(
           'NewsDigest AI',
-          style: TextStyle(
+          style: theme.textTheme.titleLarge?.copyWith(
             fontSize: 24,
             fontWeight: FontWeight.w700,
             letterSpacing: 0.2,
+            color: scheme.onSurface,
           ),
         ),
       ),
@@ -94,19 +97,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   decoration: InputDecoration(
                     hintText: 'AI, 테크, 경제 등 키워드 검색',
                     hintStyle: TextStyle(
-                      color: Colors.grey[400],
+                      color: scheme.onSurfaceVariant,
                       fontSize: 14,
                     ),
                     prefixIcon: Icon(
                       Icons.search,
-                      color: Colors.grey[400],
+                      color: scheme.onSurfaceVariant,
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
-                    fillColor: const Color(0xFFF3F4F6),
+                    fillColor: scheme.surfaceVariant,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,
@@ -125,16 +128,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   '최근 검색어',
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
+                    color: scheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 8),
                 if (recentState.items.isEmpty)
-                  const Text(
+                  Text(
                     '최근 검색어가 없습니다.',
                     style: TextStyle(
                       fontSize: 12,
-                      color: AppColors.textSecondary,
+                      color: scheme.onSurfaceVariant,
                     ),
                   )
                 else
@@ -247,22 +250,25 @@ class _SearchChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme scheme = theme.colorScheme;
+
     return InputChip(
       label: Text(label),
-      labelStyle: const TextStyle(
+      labelStyle: TextStyle(
         fontSize: 13,
         fontWeight: FontWeight.w600,
-        color: AppColors.primary,
+        color: scheme.onPrimaryContainer,
       ),
       onPressed: onTap,
       onDeleted: onDelete,
-      deleteIcon: const Icon(
+      deleteIcon: Icon(
         Icons.close,
         size: 16,
-        color: AppColors.textSecondary,
+        color: scheme.onPrimaryContainer,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-      backgroundColor: const Color(0xFFE5F0FF),
+      backgroundColor: scheme.primaryContainer,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),

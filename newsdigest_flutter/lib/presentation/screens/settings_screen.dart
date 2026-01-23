@@ -1,132 +1,136 @@
 import 'package:flutter/material.dart';
-import '/core/constants/colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:newsdigest_flutter/presentation/screens/news_webview_screen.dart';
+import 'package:newsdigest_flutter/presentation/settings/theme_provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
+  static const String _privacyUrl = '';
+  static const String _termsUrl = '';
+
+  void _openIfNotEmpty(BuildContext context, String url) {
+    if (url.isEmpty) return;
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => NewsWebViewScreen(url: url),
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
+    final ColorScheme scheme = theme.colorScheme;
+    final bool isDarkMode =
+        ref.watch(themeModeProvider) == ThemeMode.dark;
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          // 상단 제목
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 50, 16, 16),
-            child: Center(
-              child: Text(
-                '설정',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textPrimary,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      body: SafeArea(
+        minimum: const EdgeInsets.only(top: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            // 상단 제목
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
+              child: Center(
+                child: Text(
+                  '설정',
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: scheme.onSurface,
+                  ),
                 ),
               ),
             ),
-          ),
-          const Divider(height: 1, thickness: 1, color: AppColors.border),
-
-          // 다크모드 전환
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: _SettingsSwitchTile(
-              icon: Icons.nightlight_round,
-              iconBgColor: Color(0xFFF2ECFF),
-              iconColor: Color(0xFF5C6BC0),
-              title: '다크모드 전환',
-              value: false, // TODO: 나중에 상태 연동
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: scheme.outlineVariant,
             ),
-          ),
-          const Divider(height: 1, thickness: 1, color: AppColors.border),
 
-          // 알림 설정
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: _SettingsSwitchTile(
-              icon: Icons.notifications_rounded,
-              iconBgColor: Color(0xFFEDE7FF),
-              iconColor: Color(0xFF3F51B5),
-              title: '알림 설정',
-              value: true, // TODO: 나중에 상태 연동
+            // 다크모드 전환
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: _SettingsSwitchTile(
+                icon: Icons.nightlight_round,
+                iconBgColor: scheme.primaryContainer,
+                iconColor: scheme.onPrimaryContainer,
+                title: '다크모드 전환',
+                value: isDarkMode,
+                onChanged: (bool value) {
+                  ref.read(themeModeProvider.notifier).state =
+                      value ? ThemeMode.dark : ThemeMode.light;
+                },
+              ),
             ),
-          ),
-
-          const Divider(height: 1, thickness: 1, color: AppColors.border),
-
-          // 앱 버전 정보
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: _SettingsInfoTile(
-              icon: Icons.info_rounded,
-              iconBgColor: Color(0xFFF3F4F6),
-              iconColor: Colors.grey,
-              title: '앱 버전 정보',
-              trailingText: 'v1.0.0',
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: scheme.outlineVariant,
             ),
-          ),
 
-          const Divider(height: 1, thickness: 1, color: AppColors.border),
-
-          // 언어
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: _SettingsInfoTile(
-              icon: Icons.language_rounded,
-              iconBgColor: Color(0xFFE8F5E9),
-              iconColor: Color(0xFF43A047),
-              title: '언어',
-              trailingText: '한국어',
-              showArrow: true,
+            // 앱 버전 정보
+            const Padding(
+              padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: _SettingsInfoTile(
+                icon: Icons.info_rounded,
+                iconBgColor: Color(0xFFF3F4F6),
+                iconColor: Colors.grey,
+                title: '앱 버전 정보',
+                trailingText: 'v1.0.0',
+              ),
             ),
-          ),
 
-          const Divider(height: 1, thickness: 1, color: AppColors.border),
-
-          // 로그인
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: _SettingsInfoTile(
-              icon: Icons.person_rounded,
-              iconBgColor: Color(0xFFF5F5F5),
-              iconColor: Colors.grey,
-              title: '로그인',
-              showArrow: true,
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: scheme.outlineVariant,
             ),
-          ),
 
-          const Divider(height: 1, thickness: 1, color: AppColors.border),
-
-          // 개인정보 처리방침
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: _SettingsInfoTile(
-              icon: Icons.shield_rounded,
-              iconBgColor: Color(0xFFF3E5F5),
-              iconColor: Color(0xFF8E24AA),
-              title: '개인정보 처리방침',
-              showArrow: true,
+            // 개인정보 처리방침
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: _SettingsInfoTile(
+                icon: Icons.shield_rounded,
+                iconBgColor: scheme.secondaryContainer,
+                iconColor: scheme.onSecondaryContainer,
+                title: '개인정보 처리방침',
+                showArrow: true,
+                onTap: () => _openIfNotEmpty(context, _privacyUrl),
+              ),
             ),
-          ),
 
-          const Divider(height: 1, thickness: 1, color: AppColors.border),
-
-          // 이용약관
-          const Padding(
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
-            child: _SettingsInfoTile(
-              icon: Icons.description_rounded,
-              iconBgColor: Color(0xFFFFF3E0),
-              iconColor: Color(0xFFFFA726),
-              title: '이용약관',
-              showArrow: true,
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: scheme.outlineVariant,
             ),
-          ),
 
-          const Divider(height: 1, thickness: 1, color: AppColors.border),
-        ],
+            // 이용약관
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: _SettingsInfoTile(
+                icon: Icons.description_rounded,
+                iconBgColor: scheme.tertiaryContainer,
+                iconColor: scheme.onTertiaryContainer,
+                title: '이용약관',
+                showArrow: true,
+                onTap: () => _openIfNotEmpty(context, _termsUrl),
+              ),
+            ),
+
+            Divider(
+              height: 1,
+              thickness: 1,
+              color: scheme.outlineVariant,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -139,6 +143,7 @@ class _SettingsSwitchTile extends StatelessWidget {
   final Color iconColor;
   final String title;
   final bool value;
+  final ValueChanged<bool>? onChanged;
 
   const _SettingsSwitchTile({
     required this.icon,
@@ -146,6 +151,7 @@ class _SettingsSwitchTile extends StatelessWidget {
     required this.iconColor,
     required this.title,
     required this.value,
+    this.onChanged,
   });
 
   @override
@@ -159,17 +165,15 @@ class _SettingsSwitchTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
-          color: AppColors.textPrimary,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
       value: value,
-      activeColor: AppColors.primary,
-      inactiveTrackColor: Colors.grey[300],
-      onChanged: (bool _) {
-        // TODO: 나중에 Riverpod 상태랑 연결
-      },
+      activeColor: Theme.of(context).colorScheme.primary,
+      inactiveTrackColor: Theme.of(context).colorScheme.surfaceVariant,
+      onChanged: onChanged,
     );
   }
 }
@@ -182,6 +186,7 @@ class _SettingsInfoTile extends StatelessWidget {
   final String title;
   final String? trailingText;
   final bool showArrow;
+  final VoidCallback? onTap;
 
   const _SettingsInfoTile({
     required this.icon,
@@ -190,6 +195,7 @@ class _SettingsInfoTile extends StatelessWidget {
     required this.title,
     this.trailingText,
     this.showArrow = false,
+    this.onTap,
   });
 
   @override
@@ -203,9 +209,9 @@ class _SettingsInfoTile extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
-          color: AppColors.textPrimary,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ),
       trailing: Row(
@@ -214,22 +220,20 @@ class _SettingsInfoTile extends StatelessWidget {
           if (trailingText != null)
             Text(
               trailingText!,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
             ),
           if (showArrow)
-            const Icon(
+            Icon(
               Icons.chevron_right_rounded,
               size: 20,
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
         ],
       ),
-      onTap: () {
-        // TODO: 각 메뉴에 맞는 화면으로 이동
-      },
+      onTap: onTap,
     );
   }
 }

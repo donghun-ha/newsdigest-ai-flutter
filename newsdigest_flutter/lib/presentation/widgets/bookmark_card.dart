@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:newsdigest_flutter/core/constants/colors.dart';
 import 'package:newsdigest_flutter/presentation/screens/newsdetail_screen.dart';
 import 'package:newsdigest_flutter/data/models/bookmark_item.dart';
 
@@ -16,12 +15,15 @@ class BookmarkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme scheme = theme.colorScheme;
+
     return Card(
       elevation: 0.5,
-      color: AppColors.card,
+      color: scheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: AppColors.border),
+        side: BorderSide(color: scheme.outlineVariant),
       ),
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -54,17 +56,17 @@ class BookmarkCard extends StatelessWidget {
                   placeholder: (BuildContext context, String url) => Container(
                     height: 80,
                     width: 80,
-                    color: AppColors.imagePlaceholder,
+                    color: scheme.surfaceVariant,
                   ),
                   errorWidget:
                       (BuildContext context, String url, dynamic error) =>
                           Container(
                     height: 80,
                     width: 80,
-                    color: AppColors.imageError,
-                    child: const Icon(
+                    color: scheme.surfaceVariant,
+                    child: Icon(
                       Icons.broken_image_outlined,
-                      color: AppColors.textSecondary,
+                      color: scheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -82,10 +84,10 @@ class BookmarkCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             item.title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textPrimary,
+                              color: scheme.onSurface,
                               height: 1.3,
                             ),
                             maxLines: 2,
@@ -95,10 +97,10 @@ class BookmarkCard extends StatelessWidget {
                         const SizedBox(width: 4),
                         GestureDetector(
                           onTap: onRemove, // 지금은 null 유지 가능
-                          child: const Icon(
+                          child: Icon(
                             Icons.close,
                             size: 18,
-                            color: AppColors.textSecondary,
+                            color: scheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -108,9 +110,9 @@ class BookmarkCard extends StatelessWidget {
                     // 날짜
                     Text(
                       item.publishedAt ?? '',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.textSecondary,
+                        color: scheme.onSurfaceVariant,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
