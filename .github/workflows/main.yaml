@@ -16,11 +16,11 @@ jobs:
 
       - name: Restore keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > android/app/release.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > newsdigest_flutter/android/app/release.keystore
 
       - name: Create key.properties
         run: |
-          cat > android/key.properties <<EOF
+          cat > newsdigest_flutter/android/key.properties <<EOF
           storeFile=release.keystore
           storePassword=${{ secrets.KEYSTORE_PASSWORD }}
           keyPassword=${{ secrets.KEY_PASSWORD }}
@@ -28,13 +28,15 @@ jobs:
           EOF
 
       - name: Install dependencies
+        working-directory: newsdigest_flutter
         run: flutter pub get
 
       - name: Build AAB
+        working-directory: newsdigest_flutter
         run: flutter build appbundle
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: app-release-aab
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: newsdigest_flutter/build/app/outputs/bundle/release/app-release.aab
