@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:newsdigest_flutter/presentation/news/news_notifier.dart';
@@ -9,6 +10,7 @@ import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_state.dart';
 import 'package:newsdigest_flutter/presentation/recent_search/recent_search_notifier.dart';
 import 'package:newsdigest_flutter/presentation/recent_search/recent_search_provider.dart';
 import 'package:newsdigest_flutter/presentation/recent_search/recent_search_state.dart';
+import 'package:newsdigest_flutter/data/models/recent_search.dart';
 import '../widgets/news_card.dart';
 import '../news/news_provider.dart'; // newsNotifierProvider import
 import '../../data/models/news_item.dart';
@@ -109,14 +111,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       borderSide: BorderSide.none,
                     ),
                     filled: true,
-                    fillColor: scheme.surfaceVariant,
+                    fillColor: scheme.surfaceContainerHighest,
                     contentPadding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 12,
                     ),
                   ),
                   onSubmitted: (String value) {
-                    debugPrint("검색 submit: $value");
+                    if (kDebugMode) {
+                      debugPrint('검색 submit: $value');
+                    }
                     notifier.search(value);
                     recentNotifier.addSearch(value);
                   },
@@ -144,16 +148,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: recentState.items.map((search) {
-                      return _SearchChip(
-                        label: search.term,
-                        onTap: () {
-                          _searchController.text = search.term;
-                          notifier.search(search.term);
-                        },
-                        onDelete: () => recentNotifier.removeSearch(search.term),
-                      );
-                    }).toList(),
+                    children: recentState.items
+                        .map((RecentSearch search) => _SearchChip(
+                              label: search.term,
+                              onTap: () {
+                                _searchController.text = search.term;
+                                notifier.search(search.term);
+                              },
+                              onDelete: () =>
+                                  recentNotifier.removeSearch(search.term),
+                            ))
+                        .toList(),
                   ),
               ],
             ),
@@ -177,9 +182,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               itemCount: state.items.length,
               itemBuilder: (BuildContext context, int index) {
                 final NewsItem item = state.items[index];
-                debugPrint(
-                  'HomeCard index=$index id=${item.id} title=${item.title} image=${item.imageUrl}',
-                );
+                if (kDebugMode) {
+                  debugPrint(
+                    'HomeCard index=$index id=${item.id} title=${item.title} image=${item.imageUrl}',
+                  );
+                }
 
                 // NewsCard 에 맞게 Map으로 변환 (일단 임시 매핑)
                 final Map<String, dynamic> newsMap = <String, dynamic>{
@@ -197,16 +204,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                 return GestureDetector(
                   onTap: () {
-                    debugPrint(">>>>>카드 탭: ${item.title}"); // 로그
+                    if (kDebugMode) {
+                      debugPrint('>>>>>카드 탭: ${item.title}');
+                    }
 
                     Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => NewsDetailScreen(
-                            news: newsMap,
-                            searchQuery: _searchController.text,
-                          ),
-                        ));
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => NewsDetailScreen(
+                          news: newsMap,
+                          searchQuery: _searchController.text,
+                        ),
+                      ),
+                    );
                   },
                   child: NewsCard(
                     news: newsMap,

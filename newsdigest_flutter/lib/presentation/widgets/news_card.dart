@@ -127,8 +127,9 @@ class NewsCard extends StatelessWidget {
                         if (url == null || url.isEmpty) return;
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => NewsWebViewScreen(url: url),
+                          MaterialPageRoute<dynamic>(
+                            builder: (BuildContext context) =>
+                                NewsWebViewScreen(url: url),
                           ),
                         );
                       },

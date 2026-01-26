@@ -6,15 +6,17 @@ import 'package:newsdigest_flutter/presentation/settings/theme_provider.dart';
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  static const String _privacyUrl = '';
-  static const String _termsUrl = '';
+  static const String _privacyUrl =
+      'https://alabaster-chocolate-fe8.notion.site/NewsDigest-AI-2f4b5e94906580ec8ef2f906bcaa5d00?source=copy_link';
+  static const String _termsUrl =
+      'https://alabaster-chocolate-fe8.notion.site/NewsDigest-AI-2f4b5e94906580699c3acc5295ee3a8d';
 
   void _openIfNotEmpty(BuildContext context, String url) {
     if (url.isEmpty) return;
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (_) => NewsWebViewScreen(url: url),
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => NewsWebViewScreen(url: url),
       ),
     );
   }
@@ -172,7 +174,8 @@ class _SettingsSwitchTile extends StatelessWidget {
       ),
       value: value,
       activeColor: Theme.of(context).colorScheme.primary,
-      inactiveTrackColor: Theme.of(context).colorScheme.surfaceVariant,
+      inactiveTrackColor:
+          Theme.of(context).colorScheme.surfaceContainerHighest,
       onChanged: onChanged,
     );
   }

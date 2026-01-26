@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:newsdigest_flutter/data/models/bookmark_item.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_notifier.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_provider.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_state.dart';
@@ -110,7 +111,7 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
                     padding: const EdgeInsets.only(top: 4),
                     itemCount: state.items.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final item = state.items[index];
+                      final BookmarkItem item = state.items[index];
                       return BookmarkCard(
                         item: item,
                         onRemove: () async {

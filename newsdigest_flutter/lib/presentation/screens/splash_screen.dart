@@ -13,11 +13,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     // 2초 후 홈 화면으로 이동
-    Future.delayed(const Duration(seconds: 2), () {
+    Future<void>.delayed(const Duration(seconds: 2), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const MainTabScreen()),
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => const MainTabScreen(),
+          ),
         );
       }
     });

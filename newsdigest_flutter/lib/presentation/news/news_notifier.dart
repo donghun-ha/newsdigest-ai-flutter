@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:newsdigest_flutter/data/repository/news_repository.dart';
 import '../../data/models/news_item.dart';
@@ -45,10 +45,12 @@ class NewsNotifier extends StateNotifier<NewsState> {
   }
 
   Future<void> summarize(NewsItem item, {int maxSentences = 3}) async {
-    debugPrint("summarize() 진입");
+    if (kDebugMode) {
+      debugPrint('summarize() 진입');
+    }
     try {
       // URL 기반 상세 API 먼저 호출해서 본문 가져오기
-      final detail = await _repository.getNewsDetailByUrl(
+      final Map<String, dynamic> detail = await _repository.getNewsDetailByUrl(
         url: item.url,
         title: item.title,
         summary: item.summary,
@@ -60,7 +62,9 @@ class NewsNotifier extends StateNotifier<NewsState> {
       final String textToSummarize = detail['article_text'] ?? item.summary;
       await summarizeText(item.id, textToSummarize, maxSentences: maxSentences);
     } catch (e) {
-      debugPrint("요약 에러: $e");
+      if (kDebugMode) {
+        debugPrint('요약 에러: $e');
+      }
       final Set<int> updatedSummarizing =
           Set<int>.from(state.summarizingIds)..remove(item.id);
       state = state.copyWith(
@@ -93,7 +97,9 @@ class NewsNotifier extends StateNotifier<NewsState> {
     }
 
     try {
-      debugPrint("요약 입력 길이: ${text.length}자");
+      if (kDebugMode) {
+        debugPrint('요약 입력 길이: ${text.length}자');
+      }
 
       final String summary = await _repository.summarize(
         text: text,
@@ -110,7 +116,9 @@ class NewsNotifier extends StateNotifier<NewsState> {
         summaries: doneSummaries,
       );
     } catch (e) {
-      debugPrint("요약 에러: $e");
+      if (kDebugMode) {
+        debugPrint('요약 에러: $e');
+      }
       final Set<int> doneSummarizing =
           Set<int>.from(state.summarizingIds)..remove(newsId);
       state = state.copyWith(
@@ -121,13 +129,20 @@ class NewsNotifier extends StateNotifier<NewsState> {
   }
 
   Future<Map<String, dynamic>> getNewsDetail(int newsId, String query) async {
-    print("NewsNotifier: detail API 호출 newsId=$newsId, query=$query");
+    if (kDebugMode) {
+      debugPrint('NewsNotifier: detail API 호출 newsId=$newsId, query=$query');
+    }
     try {
-      final detail = await _repository.getNewsDetail(newsId, query);
-      print("detail 응답: ${detail['image_url']}");
+      final Map<String, dynamic> detail =
+          await _repository.getNewsDetail(newsId, query);
+      if (kDebugMode) {
+        debugPrint('detail 응답 수신');
+      }
       return detail;
     } catch (e) {
-      print("detail API 에러: $e");
+      if (kDebugMode) {
+        debugPrint('detail API 에러: $e');
+      }
       rethrow;
     }
   }
@@ -139,19 +154,25 @@ class NewsNotifier extends StateNotifier<NewsState> {
     String? publishedAt,
     String? source,
   }) async {
-    print("NewsNotifier: detail API 호출 url=$url");
+    if (kDebugMode) {
+      debugPrint('NewsNotifier: detail API 호출 url=$url');
+    }
     try {
-      final detail = await _repository.getNewsDetailByUrl(
+      final Map<String, dynamic> detail = await _repository.getNewsDetailByUrl(
         url: url,
         title: title,
         summary: summary,
         publishedAt: publishedAt,
         source: source,
       );
-      print("detail 응답: ${detail['image_url']}");
+      if (kDebugMode) {
+        debugPrint('detail 응답 수신');
+      }
       return detail;
     } catch (e) {
-      print("detail API 에러: $e");
+      if (kDebugMode) {
+        debugPrint('detail API 에러: $e');
+      }
       rethrow;
     }
   }

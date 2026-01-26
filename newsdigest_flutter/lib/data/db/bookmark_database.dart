@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -17,10 +20,12 @@ class BookmarkDatabase {
   }
 
   Future<Database> _initDatabase() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final path = join(dir.path, 'newsdigest.db');
+    final Directory dir = await getApplicationDocumentsDirectory();
+    final String path = join(dir.path, 'newsdigest.db');
     // DB 파일 경로 확인용 로그
-    print('Bookmark DB path: $path');
+    if (kDebugMode) {
+      debugPrint('Bookmark DB path: $path');
+    }
     return openDatabase(
       path,
       version: 1,

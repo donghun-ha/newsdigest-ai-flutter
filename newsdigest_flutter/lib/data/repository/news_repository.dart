@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../../core/constants/api_constants.dart';
 import '../models/news_search_response.dart';
@@ -60,7 +61,9 @@ class NewsRepository {
   }
 
   Future<Map<String, dynamic>> getNewsDetail(int newsId, String query) async {
-    print("Repository: detail API 호출 newsId=$newsId, query=$query");
+    if (kDebugMode) {
+      debugPrint('Repository: detail API 호출 newsId=$newsId, query=$query');
+    }
     final Uri uri = Uri.parse('$baseUrl/news/search/$newsId/detail')
         .replace(queryParameters: <String, String>{
       'query': query,
@@ -72,7 +75,9 @@ class NewsRepository {
     if (resp.statusCode != 200) {
       throw Exception('뉴스 상세정보 조회 실패: ${resp.statusCode} ${resp.body}');
     }
-    print("Response: detail 응답 성공: ${resp.body}");
+    if (kDebugMode) {
+      debugPrint('Response: detail 응답 성공');
+    }
     final Map<String, dynamic> data =
         jsonDecode(resp.body) as Map<String, dynamic>;
     return data;
@@ -85,7 +90,9 @@ class NewsRepository {
     String? publishedAt,
     String? source,
   }) async {
-    print("Repository: detail API 호출 url=$url");
+    if (kDebugMode) {
+      debugPrint('Repository: detail API 호출 url=$url');
+    }
     final Uri uri = Uri.parse('$baseUrl/news/detail').replace(
       queryParameters: <String, String>{
         'url': url,
@@ -114,15 +121,20 @@ class NewsRepository {
     final http.Response resp = await _client.get(uri);
 
     if (resp.statusCode != 200) {
-      print("이미지 검색 실패: ${resp.statusCode} ${resp.body}");
+      if (kDebugMode) {
+        debugPrint('이미지 검색 실패: ${resp.statusCode}');
+      }
       return null;
     }
 
     final Map<String, dynamic> data =
         jsonDecode(resp.body) as Map<String, dynamic>;
-    final List images = data['images'] as List ?? [];
+    final List<dynamic> images =
+        (data['images'] as List<dynamic>?) ?? <dynamic>[];
     if (images.isEmpty) return null;
 
-    return images.first['thumbnail'] as String?;
+    final Map<String, dynamic> firstImage =
+        images.first as Map<String, dynamic>;
+    return firstImage['thumbnail'] as String?;
   }
 }

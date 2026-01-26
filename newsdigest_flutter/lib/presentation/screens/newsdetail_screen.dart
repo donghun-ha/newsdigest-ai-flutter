@@ -5,6 +5,7 @@ import 'package:newsdigest_flutter/data/models/bookmark_item.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_notifier.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_provider.dart';
 import 'package:newsdigest_flutter/presentation/bookmarks/bookmark_state.dart';
+import 'package:newsdigest_flutter/presentation/news/news_notifier.dart';
 import 'package:newsdigest_flutter/presentation/news/news_provider.dart';
 import 'package:newsdigest_flutter/presentation/news/news_state.dart';
 import 'package:newsdigest_flutter/presentation/screens/news_webview_screen.dart';
@@ -44,7 +45,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
     final String title = widget.news['title'] ?? '';
     final String rawDate = widget.news['date'] ?? '';
     final String source = widget.news['source'] ?? '';
-    final notifier = ref.read(newsNotifierProvider.notifier);
+    final NewsNotifier notifier = ref.read(newsNotifierProvider.notifier);
 
     setState(() {
       _isLoadingDetail = true;
@@ -55,7 +56,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
         notifier.clearSummary(newsId);
       }
       try {
-        final detail = url.isNotEmpty
+        final Map<String, dynamic> detail = url.isNotEmpty
             ? await notifier.getNewsDetailByUrl(
                 url: url,
                 title: title,
@@ -83,10 +84,11 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
         }
       }
     } finally {
-      if (!mounted) return;
-      setState(() {
-        _isLoadingDetail = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoadingDetail = false;
+        });
+      }
     }
   }
 
@@ -293,8 +295,9 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                           : () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => NewsWebViewScreen(url: url),
+                                MaterialPageRoute<void>(
+                                  builder: (BuildContext context) =>
+                                      NewsWebViewScreen(url: url),
                                 ),
                               );
                             },

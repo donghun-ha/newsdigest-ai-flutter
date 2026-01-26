@@ -5,13 +5,13 @@ import 'bookmark_notifier.dart';
 import 'bookmark_state.dart';
 
 final Provider<BookmarkRepository> bookmarkRepositoryProvider =
-    Provider<BookmarkRepository>((ref) {
+    Provider<BookmarkRepository>((Ref ref) {
   return BookmarkRepository();
 });
 
 final StateNotifierProvider<BookmarkNotifier, BookmarkState>
     bookmarkNotifierProvider =
-    StateNotifierProvider<BookmarkNotifier, BookmarkState>((ref) {
+    StateNotifierProvider<BookmarkNotifier, BookmarkState>((Ref ref) {
   final BookmarkRepository repository = ref.watch(bookmarkRepositoryProvider);
   return BookmarkNotifier(repository);
 });

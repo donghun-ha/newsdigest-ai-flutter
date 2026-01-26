@@ -10,12 +10,14 @@ class NewsSearchResponse {
   });
 
   factory NewsSearchResponse.fromJson(Map<String, dynamic> json) {
-    final List itemsJson = json['items'] as List<dynamic>? ?? [];
+    final List<dynamic> itemsJson =
+        (json['items'] as List<dynamic>?) ?? <dynamic>[];
+    final List<NewsItem> items = itemsJson
+        .map((dynamic e) => NewsItem.fromJson(e as Map<String, dynamic>))
+        .toList();
     return NewsSearchResponse(
       total: json['total'] as int? ?? itemsJson.length,
-      items: itemsJson
-          .map((e) => NewsItem.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      items: items,
     );
   }
 }

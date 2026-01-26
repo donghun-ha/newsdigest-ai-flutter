@@ -32,8 +32,8 @@ class BookmarkCard extends StatelessWidget {
           final Map<String, dynamic> newsMap = item.toUiMap();
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => NewsDetailScreen(
+            MaterialPageRoute<void>(
+              builder: (BuildContext context) => NewsDetailScreen(
                 news: newsMap,
                 searchQuery: item.query ?? '',
               ),
