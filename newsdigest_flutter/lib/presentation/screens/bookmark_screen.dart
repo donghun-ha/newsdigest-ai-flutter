@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -156,21 +158,39 @@ class _BookmarkScreenState extends ConsumerState<BookmarkScreen> {
     final bool? result = await showDialog<bool>(
       context: context,
       builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            CupertinoDialogAction(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('취소'),
-            ),
-            CupertinoDialogAction(
-              isDestructiveAction: true,
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(confirmText),
-            ),
-          ],
-        );
+        return Platform.isIOS
+            ? CupertinoAlertDialog(
+                title: Text(title),
+                content: Text(message),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('취소'),
+                  ),
+                  CupertinoDialogAction(
+                    isDestructiveAction: true,
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Text(confirmText),
+                  ),
+                ],
+              )
+            : AlertDialog(
+                title: Text(title),
+                content: Text(message),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('취소'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    child: Text(
+                      confirmText,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              );
       },
     );
     return result ?? false;

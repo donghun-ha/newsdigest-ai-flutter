@@ -56,14 +56,14 @@ class BookmarkCard extends StatelessWidget {
                   placeholder: (BuildContext context, String url) => Container(
                     height: 80,
                     width: 80,
-                    color: scheme.surfaceVariant,
+                    color: scheme.surfaceContainerHighest,
                   ),
                   errorWidget:
                       (BuildContext context, String url, dynamic error) =>
                           Container(
                     height: 80,
                     width: 80,
-                    color: scheme.surfaceVariant,
+                    color: scheme.surfaceContainerHighest,
                     child: Icon(
                       Icons.broken_image_outlined,
                       color: scheme.onSurfaceVariant,

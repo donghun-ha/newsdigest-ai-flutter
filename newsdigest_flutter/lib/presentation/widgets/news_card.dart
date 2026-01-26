@@ -56,13 +56,13 @@ class NewsCard extends StatelessWidget {
                       placeholder: (BuildContext context, String url) =>
                           Container(
                         height: 160,
-                        color: scheme.surfaceVariant,
+                        color: scheme.surfaceContainerHighest,
                       ),
                       errorWidget:
                           (BuildContext context, String url, Object error) =>
                               Container(
                         height: 160,
-                        color: scheme.surfaceVariant,
+                        color: scheme.surfaceContainerHighest,
                         child: Icon(
                           Icons.broken_image_outlined,
                           color: scheme.onSurfaceVariant,
@@ -75,7 +75,7 @@ class NewsCard extends StatelessWidget {
                     height: 160,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: scheme.surfaceVariant,
+                      color: scheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -146,9 +146,7 @@ class NewsCard extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
                       icon: Icon(
-                        isBookmarked
-                            ? Icons.favorite
-                            : Icons.favorite_border,
+                        isBookmarked ? Icons.favorite : Icons.favorite_border,
                         size: 20,
                         color: scheme.primary,
                       ),
