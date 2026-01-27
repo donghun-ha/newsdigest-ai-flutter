@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '/core/constants/colors.dart';
 import 'main_tab_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -28,31 +29,38 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: const Center(
+      backgroundColor: AppColors.primary,
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // 로고 아이콘
-            Icon(
-              Icons.newspaper_rounded,
-              size: 80,
-              color: Colors.white,
-            ),
-            SizedBox(height: 20),
-            // 앱 제목
-            Text(
-              'NewsDigest AI',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w700,
+            // 로고 아이콘 (PNG)
+            Container(
+              width: 96,
+              height: 96,
+              decoration: BoxDecoration(
                 color: Colors.white,
-                letterSpacing: 1.2,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              padding: const EdgeInsets.all(10),
+              child: Image.asset(
+                'assets/logo/newsdigest_icon_newspaper_ai.png',
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 20),
+            // 앱 제목
+            const Text(
+              'NewsDigest AI',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+                letterSpacing: 1.1,
+              ),
+            ),
+            const SizedBox(height: 8),
             // 부제목
-            Text(
+            const Text(
               'AI로 뉴스를 요약합니다',
               style: TextStyle(
                 fontSize: 16,
@@ -60,9 +68,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             // 로딩 인디케이터
-            CircularProgressIndicator(
+            const CircularProgressIndicator(
               color: Colors.white,
               strokeWidth: 3,
             ),
