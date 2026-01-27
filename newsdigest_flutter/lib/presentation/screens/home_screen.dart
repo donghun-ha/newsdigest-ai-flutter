@@ -127,13 +127,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // "최근 검색어" (일단 UI만 유지)
-                Text(
-                  '최근 검색어',
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: scheme.onSurface,
-                  ),
+                // "최근 검색어" + 추천 다시 보기
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      '최근 검색어',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: scheme.onSurface,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => notifier.loadTrending(),
+                      child: Text(
+                        '추천 다시 보기',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: scheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 if (recentState.items.isEmpty)
