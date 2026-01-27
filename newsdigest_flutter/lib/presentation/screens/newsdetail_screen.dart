@@ -125,12 +125,6 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
           icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_horiz),
-          ),
-        ],
         centerTitle: false,
       ),
       body: SingleChildScrollView(
@@ -279,7 +273,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  // 원문 보기 버튼 (지금은 onPressed 비워둠)
+                  // 원문 보기 버튼
                   SizedBox(
                     width: double.infinity,
                     height: 48,
@@ -333,9 +327,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                               bookmarkNotifier.toggleBookmark(bookmark);
                             },
                       icon: Icon(
-                        isBookmarked
-                            ? Icons.bookmark
-                            : Icons.bookmark_border,
+                        isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                         color: isBookmarked
                             ? AppColors.primary
                             : AppColors.textSecondary,
