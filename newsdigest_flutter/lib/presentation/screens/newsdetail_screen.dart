@@ -9,7 +9,6 @@ import 'package:newsdigest_flutter/presentation/news/news_notifier.dart';
 import 'package:newsdigest_flutter/presentation/news/news_provider.dart';
 import 'package:newsdigest_flutter/presentation/news/news_state.dart';
 import 'package:newsdigest_flutter/presentation/screens/news_webview_screen.dart';
-import '/core/constants/colors.dart';
 
 class NewsDetailScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> news;
@@ -116,10 +115,13 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
       isSummarizing ? '' : (summary ?? ''),
     );
 
+    final ColorScheme scheme = theme.colorScheme;
+
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: scheme.surface,
+        foregroundColor: scheme.onSurface,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
@@ -135,7 +137,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
             Container(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: scheme.surface,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: const <BoxShadow>[
                   BoxShadow(
@@ -154,7 +156,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                     style: theme.textTheme.titleLarge?.copyWith(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.textPrimary,
+                      color: scheme.onSurface,
                       height: 1.4,
                     ),
                   ),
@@ -165,9 +167,9 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                     children: <Widget>[
                       Text(
                         formattedDate,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.textSecondary,
+                          color: scheme.onSurfaceVariant,
                         ),
                       ),
                     ],
@@ -192,9 +194,9 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFEFF5FF),
+                      color: scheme.primaryContainer,
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: const Color(0xFFD8E6FF)),
+                      border: Border.all(color: scheme.outlineVariant),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,8 +206,8 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                             Container(
                               width: 28,
                               height: 28,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFF2F6BFF),
+                              decoration: BoxDecoration(
+                                color: scheme.primary,
                                 shape: BoxShape.circle,
                               ),
                               child: const Icon(
@@ -215,12 +217,12 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            const Text(
+                            Text(
                               'AI 요약',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
-                                color: AppColors.primary,
+                                color: scheme.onPrimaryContainer,
                               ),
                             ),
                           ],
@@ -245,11 +247,11 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                const Text(
+                                Text(
                                   '•',
                                   style: TextStyle(
                                     fontSize: 14,
-                                    color: AppColors.primary,
+                                    color: scheme.primary,
                                     height: 1.4,
                                   ),
                                 ),
@@ -259,7 +261,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                                     line,
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       fontSize: 13,
-                                      color: AppColors.textPrimary,
+                                      color: scheme.onSurface,
                                       height: 1.45,
                                     ),
                                   ),
@@ -279,7 +281,7 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                     height: 48,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
+                        backgroundColor: scheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -329,16 +331,16 @@ class _NewsDetailScreenState extends ConsumerState<NewsDetailScreen> {
                       icon: Icon(
                         isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                         color: isBookmarked
-                            ? AppColors.primary
-                            : AppColors.textSecondary,
+                            ? scheme.primary
+                            : scheme.onSurfaceVariant,
                       ),
                       label: Text(
                         '북마크',
                         style: TextStyle(
                           fontSize: 14,
                           color: isBookmarked
-                              ? AppColors.primary
-                              : AppColors.textSecondary,
+                              ? scheme.primary
+                              : scheme.onSurfaceVariant,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
