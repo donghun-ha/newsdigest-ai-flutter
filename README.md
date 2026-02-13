@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/placeholder/newsdigest-logo.png" alt="newsdigest-logo" width="180" />
+    <img src="readme/newsdigest_icon_newspaper_ai.png" alt="newsdigest-logo" width="180" />
 </p>
 
 <div align="center">
@@ -20,7 +20,19 @@ AI 요약, 키워드 검색, 즐겨찾기, 다크모드를 통해 뉴스 탐색�
 <br/>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/placeholder/newsdigest-screenshot.png" alt="screenshot" width="720" />
+  <img src="readme/01_1.jpg" width="220"/>
+  <img src="readme/02_1.jpg" width="220"/>
+  <img src="readme/03_1.jpg" width="220"/>
+</p>
+
+<p align="center">
+  <img src="readme/04_1.jpg" width="220"/>
+  <img src="readme/05_1.jpg" width="220"/>
+  <img src="readme/06_1.jpg" width="220"/>
+</p>
+
+<p align="center">
+  <img src="readme/07_1.jpg" width="220"/>
 </p>
 
 <br/>
