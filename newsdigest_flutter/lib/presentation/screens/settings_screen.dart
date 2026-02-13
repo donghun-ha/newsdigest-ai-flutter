@@ -25,8 +25,7 @@ class SettingsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme scheme = theme.colorScheme;
-    final bool isDarkMode =
-        ref.watch(themeModeProvider) == ThemeMode.dark;
+    final bool isDarkMode = ref.watch(themeModeProvider) == ThemeMode.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -84,7 +83,7 @@ class SettingsScreen extends ConsumerWidget {
                 iconBgColor: Color(0xFFF3F4F6),
                 iconColor: Colors.grey,
                 title: '앱 버전 정보',
-                trailingText: 'v1.0.0',
+                trailingText: 'v1.0.1',
               ),
             ),
 
@@ -174,8 +173,7 @@ class _SettingsSwitchTile extends StatelessWidget {
       ),
       value: value,
       activeColor: Theme.of(context).colorScheme.primary,
-      inactiveTrackColor:
-          Theme.of(context).colorScheme.surfaceContainerHighest,
+      inactiveTrackColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       onChanged: onChanged,
     );
   }
