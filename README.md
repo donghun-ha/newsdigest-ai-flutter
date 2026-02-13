@@ -52,6 +52,17 @@ AI 요약, 키워드 검색, 즐겨찾기, 다크모드를 통해 뉴스 탐색�
   <img src="readme/NewsDigest_AI_System_Architecture.png" alt="architecture" width="720" />
 </p>
 
+---
+
+## 🤖 AI Summary Flow
+
+User Input  
+→ News Search API  
+→ Article Detail Fetch  
+→ Summarization API  
+→ 3-Line Result  
+→ Local Cache (SQLite)
+
 <br/>
 
 # 🚀 배포 (GitHub Actions)
@@ -67,17 +78,28 @@ Workflow: `.github/workflows/main.yaml`
 
 <p align="center">
   <a href="https://youtu.be/PN2NPfdw-eQ">
-    <img src="https://img.youtube.com/vi/PN2NPfdw-eQ/maxresdefault.jpg" width="720"/>
+    <img src="https://img.youtube.com/vi/PN2NPfdw-eQ/hqdefault.jpg" width="700" />
   </a>
   <br/>
-  ▶ 클릭하면 YouTube에서 재생됩니다
+  <b>▶ 클릭하면 YouTube에서 재생됩니다</b>
 </p>
 
 <br/>
 
 # 🏪 스토어 링크
-- Google Play: https://play.google.com/store/apps/details?id=com.harukax99.newsdigestai
-- App Store: https://apps.apple.com/kr/app/newsdigest-ai/id6758535433
+<p align="center">
+  📲 지금 바로 다운로드하세요
+</p>
+
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.harukax99.newsdigestai">
+    <img height="60" src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"/>
+  </a>
+
+  <a href="https://apps.apple.com/kr/app/newsdigest-ai/id6758535433">
+    <img height="60" src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"/>
+  </a>
+</p>
 
 <br/>
 
@@ -91,10 +113,6 @@ flutter run
 ```
 
 <br/>
-
-# 🔐 개인정보 처리방침 / 이용약관
-- 개인정보 처리방침: https://alabaster-chocolate-fe8.notion.site/NewsDigest-AI-2f4b5e94906580ec8ef2f906bcaa5d00?source=copy_link
-- 이용약관: https://alabaster-chocolate-fe8.notion.site/NewsDigest-AI-2f4b5e94906580699c3acc5295ee3a8d
 
 <br/>
 
