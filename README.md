@@ -49,7 +49,7 @@ AI 요약, 키워드 검색, 즐겨찾기, 다크모드를 통해 뉴스 탐색�
 
 # 🧱 아키텍처
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/placeholder/newsdigest-architecture.png" alt="architecture" width="720" />
+  <img src="readme/NewsDigest_AI_System_Architecture.png" alt="architecture" width="720" />
 </p>
 
 <br/>
@@ -64,13 +64,20 @@ Workflow: `.github/workflows/main.yaml`
 <br/>
 
 # 🎬 데모 영상
-- YouTube: https://youtu.be/PN2NPfdw-eQ
+
+<p align="center">
+  <a href="https://youtu.be/PN2NPfdw-eQ">
+    <img src="https://img.youtube.com/vi/PN2NPfdw-eQ/maxresdefault.jpg" width="720"/>
+  </a>
+  <br/>
+  ▶ 클릭하면 YouTube에서 재생됩니다
+</p>
 
 <br/>
 
 # 🏪 스토어 링크
 - Google Play: https://play.google.com/store/apps/details?id=com.harukax99.newsdigestai
-- App Store: https://apps.apple.com/app/idYOUR_APP_ID
+- App Store: https://apps.apple.com/kr/app/newsdigest-ai/id6758535433
 
 <br/>
 
