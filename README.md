@@ -20,19 +20,13 @@ AI 요약, 키워드 검색, 즐겨찾기, 다크모드를 통해 뉴스 탐색�
 <br/>
 
 <p align="center">
-  <img src="readme/01_1.jpg" width="220"/>
-  <img src="readme/02_1.jpg" width="220"/>
-  <img src="readme/03_1.jpg" width="220"/>
-</p>
-
-<p align="center">
-  <img src="readme/04_1.jpg" width="220"/>
-  <img src="readme/05_1.jpg" width="220"/>
-  <img src="readme/06_1.jpg" width="220"/>
-</p>
-
-<p align="center">
-  <img src="readme/07_1.jpg" width="220"/>
+  <img src="readme/01_1.jpg" width="150"/>
+  <img src="readme/02_1.jpg" width="150"/>
+  <img src="readme/03_1.jpg" width="150"/>
+  <img src="readme/04_1.jpg" width="150"/>
+  <img src="readme/05_1.jpg" width="150"/>
+  <img src="readme/06_1.jpg" width="150"/>
+  <img src="readme/07_1.jpg" width="150"/>
 </p>
 
 <br/>
